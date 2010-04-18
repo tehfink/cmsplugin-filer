@@ -1,7 +1,7 @@
 from cms.plugin_pool import plugin_pool
 from cms.plugin_base import CMSPluginBase
 from django.utils.translation import ugettext_lazy as _
-import models
+from cmsplugin_filer_teaser import models
 from django.conf import settings
 
 class FilerTeaserPlugin(CMSPluginBase):
