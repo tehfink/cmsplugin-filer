@@ -7,11 +7,21 @@ from django.conf import settings
 class FilerImagePlugin(CMSPluginBase):
     model = models.FilerImage
     name = _("Image (Filer)")
-    render_template = "cmsplugin_filer_image/image.html"
+
+    render_template_base = "cmsplugin_filer_image"
     text_enabled = True
     raw_id_fields = ('image',)
-    
+
     def render(self, context, instance, placeholder):
+
+        try:
+            template = settings.CMS_PLACEHOLDER_CONF[instance.placeholder]['extra_context'][self.__class__.__name__]['render_template']
+        except (KeyError, AttributeError):
+            template = "image.html"
+
+        import os
+        self.render_template = os.path.join(self.render_template_base, template)
+
         # TODO: this scaling code needs to be in a common place
         # use the placeholder width as a hint for sizing
         placeholder_width = context.get('width', None)
@@ -30,10 +40,10 @@ class FilerImagePlugin(CMSPluginBase):
         else:
             # height was not externally defined: use ratio to scale it by the width
             height = int( float(width)*float(instance.image.height)/float(instance.image.width) )
-        
+
         context.update({
             'object':instance,
-            'link':instance.link, 
+            'link':instance.link,
             #'image_url':instance.scaled_image_url,
             'image_size': u'%sx%s' % (width, height),
             'placeholder':placeholder
