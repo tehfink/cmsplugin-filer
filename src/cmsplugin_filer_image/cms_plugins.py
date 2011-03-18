@@ -46,6 +46,8 @@ class FilerImagePlugin(CMSPluginBase):
             'link':instance.link,
             #'image_url':instance.scaled_image_url,
             'image_size': u'%sx%s' % (width, height),
+            'image_width': width,
+            'image_height': height,
             'placeholder':placeholder
         })
         return context
